@@ -23,7 +23,7 @@ const RecipeDetail: React.FC = () => {
                     navigate('/404');
                 }
             } catch (error) {
-                console.error("Villa við að sækja uppskrift:", error);
+                console.error("Error fetching recipe:", error);
             } finally {
                 setLoading(false);
             }
@@ -34,7 +34,7 @@ const RecipeDetail: React.FC = () => {
         }
     }, [id, navigate]);
 
-    if (loading) return <p>Hleður uppskrift...</p>;
+    if (loading) return <p>Loading...</p>;
     if (!recipe) return null;
 
     // aðgreina hráefni og mælingar í lista
@@ -64,9 +64,9 @@ const RecipeDetail: React.FC = () => {
                  className="recipe-image"
                  style={{ width: '100%', borderRadius: '8px' }} 
             />
-            <p><strong>Flokkur:</strong> {recipe.strCategory}</p>
-            <p><strong>Upprunaland:</strong> {recipe.strArea}</p>
-            <h2>Hráefni:</h2>
+            <p><strong>Category:</strong> {recipe.strCategory}</p>
+            <p><strong>Country:</strong> {recipe.strArea}</p>
+            <h2>Ingredients</h2>
             <ul>
                 {ingredients.map((item, index) => (
                     <li key={index}>
@@ -74,7 +74,7 @@ const RecipeDetail: React.FC = () => {
                     </li>
                 ))}
             </ul>
-            <h2>Leiðbeiningar:</h2>
+            <h2>Instructions</h2>
             <p style={{ whiteSpace: 'pre-line' }}>
                 {recipe.strInstructions}
             </p>
