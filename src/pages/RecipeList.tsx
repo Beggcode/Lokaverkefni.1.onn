@@ -2,32 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { type MealListItem as RecipeTypes } from '../types/RecipeTypes';
 
+
 const RecipeList: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [recipes, setRecipes] = useState<RecipeTypes[]>([]);
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<{ strCategory: string }[]>([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-
+    const [areas, setAreas] = useState<{ strArea: string }[]>([]);
+    const [selectedArea, setSelectedArea] = useState('');
+    
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            const res = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
-            const data = await res.json();
-            setCategories(data.meals || []);
+        const fetchFilters = async () => {
+            try {
+                const [catRes, areaRes] = await Promise.all([
+                    fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list'),
+                    fetch('https://www.themealdb.com/api/json/v1/1/list.php?a=list')
+                ]);
+                const catData = await catRes.json();
+                const areaData = await areaRes.json();
+                
+                setCategories(catData.meals || []);
+                setAreas(areaData.meals || []);
+            } catch (error) {
+                console.error("Error fetching filter lists:", error);
+            }
         };
-        fetchCategories();
+        fetchFilters();
     }, []);
-
 
     const handleCategoryChange = async (category: string) => {
         setSelectedCategory(category);
-        setSearchTerm(''); 
+        setSelectedArea('');
+        setSearchTerm('');
 
-        if (!category) {
-            setRecipes([]);
-            return;
-        }
+        if (!category) return;
 
         setLoading(true);
         try {
@@ -35,17 +45,37 @@ const RecipeList: React.FC = () => {
             const data = await res.json();
             setRecipes(data.meals || []);
         } catch (error) {
-            console.error("Filter error:", error);
+            console.error("Category filter error:", error);
         } finally {
             setLoading(false);
         }
     };
 
+    const handleAreaChange = async (area: string) => {
+        setSelectedArea(area);
+        setSelectedCategory('');
+        setSearchTerm('');
+
+        if (!area) return;
+
+        setLoading(true);
+        try {
+            const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`);
+            const data = await res.json();
+            setRecipes(data.meals || []);
+        } catch (error) {
+            console.error("Area filter error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!searchTerm.trim()) return;
+        
         setSelectedCategory(''); 
+        setSelectedArea('');
 
         setLoading(true);
         try {
@@ -55,16 +85,12 @@ const RecipeList: React.FC = () => {
             const data = await response.json();
             setRecipes(data.meals || []); 
         } catch (error) {
-            console.error("Invalid search!", error);
+            console.error("Search error:", error);
         } finally {
             setLoading(false);
         }
     };
 
-
-
-
-    
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
             <h1>Search for recipes</h1>
@@ -74,37 +100,39 @@ const RecipeList: React.FC = () => {
                     type="text" 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Retrieving recipe..."
-                    style={{ padding: '10px', width: '300px', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: '#333', color: 'white' }}
+                    placeholder="Search recipes..."
+                    style={{ padding: '10px', width: '300px', borderRadius: '4px', backgroundColor: '#333', color: 'white', border: '1px solid #ccc' }}
                 />
                 <button type="submit" style={{ padding: '10px 20px', marginLeft: '10px', cursor: 'pointer' }}>
                     Search
                 </button>
             </form>
 
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', flexWrap: 'wrap' }}>
                 <select 
                     value={selectedCategory} 
                     onChange={(e) => handleCategoryChange(e.target.value)}
-                    style={{ 
-                        padding: '10px', 
-                        borderRadius: '4px', 
-                        backgroundColor: '#333', 
-                        color: 'white',
-                        border: '1px solid #555',
-                        cursor: 'pointer'
-                    }}
+                    style={{ padding: '10px', borderRadius: '4px', backgroundColor: '#333', color: 'white', border: '1px solid #555' }}
                 >
                     <option value="">Filter by Category</option>
                     {categories.map((cat) => (
-                        <option key={cat.strCategory} value={cat.strCategory}>
-                            {cat.strCategory}
-                        </option>
+                        <option key={cat.strCategory} value={cat.strCategory}>{cat.strCategory}</option>
+                    ))}
+                </select>
+
+                <select 
+                    value={selectedArea} 
+                    onChange={(e) => handleAreaChange(e.target.value)}
+                    style={{ padding: '10px', borderRadius: '4px', backgroundColor: '#333', color: 'white', border: '1px solid #555' }}
+                >
+                    <option value="">Filter by Country</option>
+                    {areas.map((area) => (
+                        <option key={area.strArea} value={area.strArea}>{area.strArea}</option>
                     ))}
                 </select>
             </div>
 
-            {loading && <p>Searching...</p>}
+            {loading && <p>Loading results...</p>}
 
             <div style={{ 
                 display: 'grid', 
@@ -113,24 +141,17 @@ const RecipeList: React.FC = () => {
             }}>
                 {recipes.map((recipe) => (
                     <div key={recipe.idMeal} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', textAlign: 'center' }}>
-                        <img 
-                            src={recipe.strMealThumb} 
-                            alt={recipe.strMeal} 
-                            style={{ width: '100%', borderRadius: '4px' }} 
-                        />
+                        <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ width: '100%', borderRadius: '4px' }} />
                         <h3 style={{ margin: '10px 0' }}>{recipe.strMeal}</h3>
-                        <Link 
-                            to={`/recipes/${recipe.idMeal}`}
-                            style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}
-                        >
+                        <Link to={`/recipes/${recipe.idMeal}`} style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
                             see more
                         </Link>
                     </div>
                 ))}
             </div>
 
-            {!loading && recipes.length === 0 && (searchTerm || selectedCategory) && (
-                <p>No recipes found. Try something else!</p>
+            {!loading && recipes.length === 0 && (searchTerm || selectedCategory || selectedArea) && (
+                <p>No recipes found. Try a different search or filter!</p>
             )}
         </div>
     );
