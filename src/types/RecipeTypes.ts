@@ -6,10 +6,15 @@ export interface MealListItem {
 }
 
 // tegund fyrir nákvæmari upplýsingar um uppskrift
-export interface RecipeDetail extends MealListItem {
-    strCategory: string; 
-    strArea: string; 
+export interface RecipeDetail {
+    idMeal: string;
+    strMeal: string;
+    strMealThumb: string;
+    strCategory: string;
+    strArea: string;
     strInstructions: string;
+    strYoutube?: string;
+    [key: string]: string | undefined; 
 }
 
 // tegund fyrir category
