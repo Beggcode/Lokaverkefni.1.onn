@@ -60,7 +60,6 @@ const RecipeDetail: React.FC = () => {
 
     const ingredients = [];
     for (let i = 1; i <= 20; i++) {
-        // Fixed: Use indexed access on recipe now that the type supports it
         const ingredient = recipe[`strIngredient${i}`];
         const measure = recipe[`strMeasure${i}`];
         
@@ -87,7 +86,6 @@ const RecipeDetail: React.FC = () => {
             <h2>Instructions</h2>
             <p style={{ whiteSpace: 'pre-line' }}>{recipe.strInstructions}</p>
 
-            {/* Fixed: strYoutube is now recognized by the type */}
             {recipe.strYoutube && (
                 <div style={{ marginTop: '20px' }}>
                     <a href={recipe.strYoutube} target="_blank" rel="noreferrer">Watch Video</a>
