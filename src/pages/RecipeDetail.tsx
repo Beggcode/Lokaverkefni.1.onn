@@ -95,7 +95,7 @@ const RecipeDetail: React.FC = () => {
             <hr />
 
             <h2>Similar Recipes</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px' }}>
                 {similarRecipes.map((s) => (
                     <Link key={s.idMeal} to={`/recipes/${s.idMeal}`}>
                         <img src={s.strMealThumb} alt={s.strMeal} style={{ width: '100%' }} />
