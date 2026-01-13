@@ -1,108 +1,134 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { type RecipeDetail as RecipeTypes } from '../types/RecipeTypes';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import type { MealListItem as RecipeTypes } from '../types/RecipeTypes';
 
-type RecipeSummary = {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
-};
+interface FullRecipe extends RecipeTypes {
+    strInstructions: string;
+    strArea: string;
+    strCategory: string;
+    [key: string]: string | undefined;
+}
 
 const RecipeDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
-    const [recipe, setRecipe] = useState<RecipeTypes | null>(null);
-    const [similarRecipes, setSimilarRecipes] = useState<RecipeSummary[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [recipe, setRecipe] = useState<FullRecipe | null>(null);
+    const [similarRecipes, setSimilarRecipes] = useState<RecipeTypes[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchSimilar = async (category: string) => {
+        const fetchRecipeDetail = async () => {
+            setLoading(true);
             try {
-                const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`);
+                const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
                 const data = await res.json();
-                const filtered = (data.meals as RecipeSummary[])
-                    ?.filter((m: RecipeSummary) => m.idMeal !== id)
-                    .slice(0, 4) || [];
-                setSimilarRecipes(filtered);
-            } catch (err) {
-                console.error("Error fetching similar recipes:", err);
-            }
-        };
+                const selectedRecipe = data.meals[0] as FullRecipe;
+                setRecipe(selectedRecipe);
 
-        const getRecipe = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-                const data = await response.json();
-
-                if (data.meals && data.meals.length > 0) {
-                    const currentRecipe = data.meals[0] as RecipeTypes;
-                    setRecipe(currentRecipe);
-                    fetchSimilar(currentRecipe.strCategory);
-                    window.scrollTo(0, 0);
-                } else {
-                    navigate('/404');
-                }
+                const similarRes = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${selectedRecipe.strCategory}`);
+                const similarData = await similarRes.json();
+                
+                // Increased slice from 4 to 12 to provide more suggestions
+                setSimilarRecipes(
+                    (similarData.meals as RecipeTypes[])
+                        .filter((m) => m.idMeal !== id)
+                        .slice(0, 12)
+                );
             } catch (error) {
-                console.error("Error fetching recipe:", error);
+                console.error(error);
             } finally {
                 setLoading(false);
             }
         };
+        fetchRecipeDetail();
+    }, [id]);
 
-        if (id) {
-            getRecipe();
-        }
-    }, [id, navigate]);
-
-    if (loading) return <div>Loading...</div>;
-    if (!recipe) return null;
+    if (loading) return <p style={{ textAlign: 'center', marginTop: '50px', color: '#3498db' }}>Loading...</p>;
+    if (!recipe) return <p style={{ textAlign: 'center', marginTop: '50px' }}>Recipe not found.</p>;
 
     const ingredients = [];
     for (let i = 1; i <= 20; i++) {
         const ingredient = recipe[`strIngredient${i}`];
         const measure = recipe[`strMeasure${i}`];
-        
-        if (ingredient && ingredient.trim() !== '') {
-            ingredients.push({
-                name: ingredient,
-                measure: measure || '',
-            });
+        if (ingredient && ingredient.trim()) {
+            ingredients.push(`${measure} ${ingredient}`);
         }
     }
 
     return (
-        <div className="recipe-container" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <h1>{recipe.strMeal}</h1>
-            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ width: '100%', borderRadius: '12px' }} />
-            
-            <h2>Ingredients</h2>
-            <ul>
-                {ingredients.map((item, index) => (
-                    <li key={index}>{item.measure} - {item.name}</li>
-                ))}
-            </ul>
+        <div style={{ padding: '20px', maxWidth: '900px', margin: '0 auto', color: 'white' }}>
+            <header style={{ textAlign: 'center', marginBottom: '40px', marginTop: '20px' }}>
+                <h1 style={{ 
+                    fontSize: 'clamp(2.2rem, 8vw, 4rem)', 
+                    fontWeight: '900', 
+                    letterSpacing: '-1.5px',
+                    lineHeight: '1',
+                    marginBottom: '15px',
+                    background: 'linear-gradient(to bottom, #ffffff, #bbbbbb)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    textTransform: 'uppercase'
+                }}>
+                    {recipe.strMeal}
+                </h1>
+                <div style={{ 
+                    height: '4px', 
+                    width: '80px', 
+                    backgroundColor: '#3498db', 
+                    margin: '0 auto 25px', 
+                    borderRadius: '2px' 
+                }}></div>
+                <p style={{ fontSize: '1.1rem', color: '#888', textTransform: 'uppercase', letterSpacing: '3px', fontWeight: '500' }}>
+                    {recipe.strArea} • {recipe.strCategory}
+                </p>
+            </header>
 
-            <h2>Instructions</h2>
-            <p style={{ whiteSpace: 'pre-line' }}>{recipe.strInstructions}</p>
+            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ width: '100%', borderRadius: '25px', marginBottom: '40px', boxShadow: '0 15px 40px rgba(0,0,0,0.6)' }} />
 
-            {recipe.strYoutube && (
-                <div style={{ marginTop: '20px' }}>
-                    <a href={recipe.strYoutube} target="_blank" rel="noreferrer">Watch Video</a>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px', marginBottom: '60px' }}>
+                <div style={{ backgroundColor: '#161616', padding: '25px', borderRadius: '20px', border: '1px solid #222' }}>
+                    <h2 style={{ fontSize: '1.5rem', borderBottom: '2px solid #3498db', display: 'inline-block', paddingBottom: '5px', marginBottom: '20px' }}>Ingredients</h2>
+                    <ul style={{ paddingLeft: '20px', lineHeight: '2.2', listStyleType: 'circle' }}>
+                        {ingredients.map((item, index) => (
+                            <li key={index} style={{ color: '#ccc' }}>{item}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h2 style={{ fontSize: '1.5rem', borderBottom: '2px solid #333', paddingBottom: '10px', marginBottom: '20px' }}>Instructions</h2>
+                    <p style={{ lineHeight: '1.8', color: '#ddd', whiteSpace: 'pre-line' }}>{recipe.strInstructions}</p>
+                </div>
+            </div>
+
+            {similarRecipes.length > 0 && (
+                <div style={{ marginTop: '80px', borderTop: '1px solid #333', paddingTop: '50px' }}>
+                    <h2 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '1.8rem' }}>Similar Recipes</h2>
+                    <div style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', 
+                        gap: '15px' 
+                    }}>
+                        {similarRecipes.map((item) => (
+                            <Link key={item.idMeal} to={`/recipes/${item.idMeal}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <div style={{ borderRadius: '15px', backgroundColor: '#1e1e1e', overflow: 'hidden', border: '1px solid #333', height: '100%' }}>
+                                    <img src={item.strMealThumb} alt={item.strMeal} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover' }} />
+                                    <div style={{ padding: '12px', textAlign: 'center' }}>
+                                        <h3 style={{ 
+                                            fontSize: '0.85rem', 
+                                            margin: '0', 
+                                            display: '-webkit-box', 
+                                            WebkitLineClamp: 2, 
+                                            WebkitBoxOrient: 'vertical', 
+                                            overflow: 'hidden', 
+                                            fontWeight: '600',
+                                            lineHeight: '1.3'
+                                        }}>{item.strMeal}</h3>
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             )}
-
-            <hr />
-
-            <h2>Similar Recipes</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px' }}>
-                {similarRecipes.map((s) => (
-                    <Link key={s.idMeal} to={`/recipes/${s.idMeal}`}>
-                        <img src={s.strMealThumb} alt={s.strMeal} style={{ width: '100%' }} />
-                        <p>{s.strMeal}</p>
-                    </Link>
-                ))}
-            </div>
         </div>
     );
 };

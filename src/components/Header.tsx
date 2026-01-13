@@ -6,7 +6,7 @@ const Header: React.FC = () => {
         backgroundColor: 'rgba(26, 26, 26, 0.9)',
         padding: '1rem 2rem',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center', // Changed to center to make the logo the hero
         alignItems: 'center',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         position: 'sticky',
@@ -25,7 +25,8 @@ const Header: React.FC = () => {
         alignItems: 'center',
         cursor: 'pointer',
         position: 'relative',
-        zIndex: 2001
+        zIndex: 2001,
+        letterSpacing: '1px'
     };
 
     return (
@@ -33,11 +34,6 @@ const Header: React.FC = () => {
             <Link to="/" style={logoStyle}>
                 🍳 Panic at the Bistro
             </Link>
-            <nav style={{ position: 'relative', zIndex: 2001 }}>
-                <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '1rem' }}>
-                    Home
-                </Link>
-            </nav>
         </header>
     );
 };
