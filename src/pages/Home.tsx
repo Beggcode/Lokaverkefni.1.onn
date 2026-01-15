@@ -25,7 +25,7 @@ const Home: React.FC = () => {
             ...base,
             backgroundColor: '#1a1a1a',
             borderColor: '#444',
-            minHeight: '52px',
+            minHeight: '45px',
             borderRadius: '10px',
             boxShadow: 'none',
             '&:hover': { borderColor: '#3498db' }
@@ -38,12 +38,11 @@ const Home: React.FC = () => {
         }),
         option: (base, state) => ({
             ...base,
-            padding: '15px',
-            fontSize: '16px',
+            padding: '12px',
+            fontSize: '14px',
             backgroundColor: state.isSelected ? '#3498db' : state.isFocused ? '#333' : '#1a1a1a',
             color: 'white',
             cursor: 'pointer',
-            '&:active': { backgroundColor: '#3498db' }
         }),
         singleValue: (base) => ({ ...base, color: 'white' }),
         input: (base) => ({ ...base, color: 'white' }),
@@ -149,8 +148,8 @@ const Home: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', color: 'white' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '2rem' }}>Search for recipes</h1>
+        <div style={{ padding: '0 20px 20px 20px', maxWidth: '1200px', margin: '0 auto', color: 'white' }}>
+            <h1 style={{ textAlign: 'center', margin: '30px 0', fontSize: '1.8rem' }}>Hvað eigum við að elda?</h1>
             
             <form onSubmit={handleSearch} style={{ marginBottom: '25px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
                 <input 
@@ -158,48 +157,67 @@ const Home: React.FC = () => {
                     inputMode="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search recipes..."
+                    placeholder="Leita að uppskrift..."
                     style={{ padding: '14px', width: '100%', maxWidth: '400px', borderRadius: '10px', backgroundColor: '#1a1a1a', color: 'white', border: '1px solid #444', fontSize: '16px' }}
                 />
                 <button type="submit" style={{ padding: '14px', width: '100%', maxWidth: '400px', borderRadius: '10px', border: 'none', backgroundColor: '#3498db', color: 'white', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}>
-                    Search
+                    Leita
                 </button>
             </form>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%', maxWidth: '400px', margin: '0 auto' }}>
-                <Select<SelectOption, false>
-                    options={[
-                        { value: '', label: 'All Categories' },
-                        ...categories.map(cat => ({ value: cat.strCategory, label: cat.strCategory }))
-                    ]}
-                    value={selectedCategory ? { value: selectedCategory, label: selectedCategory } : { value: '', label: 'All Categories' }}
-                    onChange={(newValue) => handleCategoryChange(newValue?.value || '')}
-                    styles={customStyles}
-                    placeholder="Select Category"
-                    isSearchable={false}
-                />
+            <div style={{ 
+                position: 'sticky', 
+                top: '70px',
+                zIndex: 1000, 
+                backgroundColor: '#121212', 
+                padding: '10px 0',
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '10px', 
+                width: '100%', 
+                maxWidth: '400px', 
+                margin: '0 auto 20px auto' 
+            }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    <Select<SelectOption, false>
+                        options={[
+                            { value: '', label: 'Allir flokkar' },
+                            ...categories.map(cat => ({ value: cat.strCategory, label: cat.strCategory }))
+                        ]}
+                        value={selectedCategory ? { value: selectedCategory, label: selectedCategory } : { value: '', label: 'Allir flokkar' }}
+                        onChange={(newValue) => handleCategoryChange(newValue?.value || '')}
+                        styles={customStyles}
+                        isSearchable={false}
+                    />
 
-                <Select<SelectOption, false>
-                    options={[
-                        { value: '', label: 'All Countries' },
-                        ...areas.map(area => ({ value: area.strArea, label: area.strArea }))
-                    ]}
-                    value={selectedArea ? { value: selectedArea, label: selectedArea } : { value: '', label: 'All Countries' }}
-                    onChange={(newValue) => handleAreaChange(newValue?.value || '')}
-                    styles={customStyles}
-                    placeholder="Select Country"
-                    isSearchable={false}
-                />
+                    <Select<SelectOption, false>
+                        options={[
+                            { value: '', label: 'Öll lönd' },
+                            ...areas.map(area => ({ value: area.strArea, label: area.strArea }))
+                        ]}
+                        value={selectedArea ? { value: selectedArea, label: selectedArea } : { value: '', label: 'Öll lönd' }}
+                        onChange={(newValue) => handleAreaChange(newValue?.value || '')}
+                        styles={customStyles}
+                        isSearchable={false}
+                    />
+                </div>
+                
+                {!loading && (
+                    <p style={{ fontSize: '0.8rem', color: '#888', textAlign: 'center', margin: '5px 0 0 0' }}>
+                        Sýni {recipes.length} uppskriftir
+                        {selectedCategory && ` í ${selectedCategory}`}
+                        {selectedArea && ` frá ${selectedArea}`}
+                    </p>
+                )}
             </div>
 
-            {loading && <p style={{ textAlign: 'center', color: '#3498db', marginTop: '40px' }}>Loading...</p>}
+            {loading && <p style={{ textAlign: 'center', color: '#3498db', marginTop: '40px' }}>Hleð...</p>}
 
             {!loading && recipes.length > 0 && (
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', 
-                    gap: '15px',
-                    marginTop: '60px' 
+                    gap: '15px'
                 }}>
                     {recipes.map((recipe) => (
                         <Link 
@@ -212,7 +230,7 @@ const Home: React.FC = () => {
                                 <div style={{ padding: '12px', textAlign: 'center' }}>
                                     <h3 style={{ 
                                         margin: '0', 
-                                        fontSize: '0.95rem', 
+                                        fontSize: '0.9rem', 
                                         fontWeight: '500',
                                         display: '-webkit-box',
                                         WebkitLineClamp: 2,
