@@ -148,20 +148,53 @@ const Home: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: '0 20px 20px 20px', maxWidth: '1200px', margin: '0 auto', color: 'white' }}>
-            <h1 style={{ textAlign: 'center', margin: '30px 0', fontSize: '1.8rem' }}>Hvað eigum við að elda?</h1>
+        <div style={{ 
+            padding: '0 20px 20px 20px', 
+            maxWidth: '1200px', 
+            margin: '0 auto', 
+            color: 'white' }}>
+            <h1 style={{ 
+                textAlign: 'center', 
+                margin: '30px 0', 
+                fontSize: '1.8rem' }}>What's cooking, good looking?
+            </h1>
             
-            <form onSubmit={handleSearch} style={{ marginBottom: '25px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+            <form onSubmit={handleSearch} style={{ 
+                marginBottom: '25px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '12px', 
+                alignItems: 'center' }}>
                 <input 
                     type="text" 
                     inputMode="search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Leita að uppskrift..."
-                    style={{ padding: '14px', width: '100%', maxWidth: '400px', borderRadius: '10px', backgroundColor: '#1a1a1a', color: 'white', border: '1px solid #444', fontSize: '16px' }}
+                    placeholder="Searching for recipe..."
+                    style={{ 
+                        padding: '14px', 
+                        width: '100%', 
+                        maxWidth: '400px', 
+                        borderRadius: '10px', 
+                        backgroundColor: '#141414ff', 
+                        color: 'white', 
+                        border: '1px solid #444444ff', 
+                        fontSize: '16px' }}
                 />
-                <button type="submit" style={{ padding: '14px', width: '100%', maxWidth: '400px', borderRadius: '10px', border: 'none', backgroundColor: '#3498db', color: 'white', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}>
-                    Leita
+                <button type="submit" style={{ 
+                    padding: '14px', 
+                    width: '100%', 
+                    maxWidth: '400px', 
+                    borderRadius: '10px', 
+                    border: 'none', 
+                    backgroundColor: '#3498dbff', 
+                    color: 'white', 
+                    fontWeight: 'bold', 
+                    cursor: 'pointer', 
+                    fontSize: '16px' }}>
+
+                    Search
+
                 </button>
             </form>
 
@@ -169,7 +202,7 @@ const Home: React.FC = () => {
                 position: 'sticky', 
                 top: '70px',
                 zIndex: 1000, 
-                backgroundColor: '#121212', 
+                backgroundColor: '#121212ff', 
                 padding: '10px 0',
                 display: 'flex', 
                 flexDirection: 'column', 
@@ -178,13 +211,18 @@ const Home: React.FC = () => {
                 maxWidth: '400px', 
                 margin: '0 auto 20px auto' 
             }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr 1fr', 
+                    gap: '10px' }}
+                >
                     <Select<SelectOption, false>
                         options={[
-                            { value: '', label: 'Allir flokkar' },
+                            { value: '', label: 'Categories' },
                             ...categories.map(cat => ({ value: cat.strCategory, label: cat.strCategory }))
                         ]}
-                        value={selectedCategory ? { value: selectedCategory, label: selectedCategory } : { value: '', label: 'Allir flokkar' }}
+                        value={selectedCategory ? { value: selectedCategory, label: selectedCategory }
+                            : { value: '', label: 'Categories' }}
                         onChange={(newValue) => handleCategoryChange(newValue?.value || '')}
                         styles={customStyles}
                         isSearchable={false}
@@ -192,10 +230,11 @@ const Home: React.FC = () => {
 
                     <Select<SelectOption, false>
                         options={[
-                            { value: '', label: 'Öll lönd' },
+                            { value: '', label: 'Country' },
                             ...areas.map(area => ({ value: area.strArea, label: area.strArea }))
                         ]}
-                        value={selectedArea ? { value: selectedArea, label: selectedArea } : { value: '', label: 'Öll lönd' }}
+                        value={selectedArea ? { value: selectedArea, label: selectedArea }
+                             : { value: '', label: 'Country' }}
                         onChange={(newValue) => handleAreaChange(newValue?.value || '')}
                         styles={customStyles}
                         isSearchable={false}
@@ -203,15 +242,27 @@ const Home: React.FC = () => {
                 </div>
                 
                 {!loading && (
-                    <p style={{ fontSize: '0.8rem', color: '#888', textAlign: 'center', margin: '5px 0 0 0' }}>
-                        Sýni {recipes.length} uppskriftir
+                    <p style={{ 
+                        fontSize: '0.8rem', 
+                        color: '#888',
+                        textAlign: 'center', 
+                        margin: '5px 0 0 0' }}>
+                        Showing {recipes.length} recipes
                         {selectedCategory && ` í ${selectedCategory}`}
                         {selectedArea && ` frá ${selectedArea}`}
                     </p>
                 )}
             </div>
 
-            {loading && <p style={{ textAlign: 'center', color: '#3498db', marginTop: '40px' }}>Hleð...</p>}
+            {loading && 
+            <p style={{ 
+                textAlign: 'center', 
+                color: '#3498db', 
+                marginTop: '40px' }}>
+                    
+                    Loading...
+                
+            </p>}
 
             {!loading && recipes.length > 0 && (
                 <div style={{ 
@@ -225,9 +276,21 @@ const Home: React.FC = () => {
                             to={`/recipes/${recipe.idMeal}`} 
                             style={{ textDecoration: 'none', color: 'inherit' }}
                         >
-                            <div style={{ borderRadius: '15px', backgroundColor: '#1e1e1e', overflow: 'hidden', border: '1px solid #333', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover' }} />
-                                <div style={{ padding: '12px', textAlign: 'center' }}>
+                            <div style={{ 
+                                borderRadius: '15px', 
+                                backgroundColor: '#1e1e1e', 
+                                overflow: 'hidden', 
+                                border: '1px solid #333', 
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                height: '100%' }}>
+                                <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ 
+                                    width: '100%', 
+                                    aspectRatio: '1/1', 
+                                    objectFit: 'cover' }} />
+                                <div style={{ 
+                                    padding: '12px', 
+                                    textAlign: 'center' }}>
                                     <h3 style={{ 
                                         margin: '0', 
                                         fontSize: '0.9rem', 
@@ -237,7 +300,8 @@ const Home: React.FC = () => {
                                         WebkitBoxOrient: 'vertical',
                                         overflow: 'hidden',
                                         lineHeight: '1.3'
-                                    }}>{recipe.strMeal}</h3>
+                                    }}>{recipe.strMeal}
+                                    </h3>
                                 </div>
                             </div>
                         </Link>

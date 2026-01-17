@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
             color: '#888',
             padding: '40px 20px',
             marginTop: '60px',
-            borderTop: '1px solid #333',
+            borderTop: '1px solid rgba(251, 250, 250, 0.34)',
             textAlign: 'center'
         }}>
             <div style={{ marginBottom: '10px' }}>
@@ -18,10 +18,10 @@ const Footer: React.FC = () => {
                     display: 'block',
                     marginBottom: '5px'
                 }}>
-                    🍳 Panic at the Bistro
+                     Panic at the Bistro
                 </span>
                 <p style={{ fontSize: '0.85rem', margin: 0 }}>
-                    Delicious recipes for every kitchen crisis.
+                    I chime in with a: Haven't you people ever heard of... cooking a decent meal?
                 </p>
             </div>
 
@@ -30,7 +30,11 @@ const Footer: React.FC = () => {
                     © 2026 Panic at the Bistro. All rights reserved.
                 </p>
                 <p style={{ margin: '5px 0' }}>
-                    Data provided by <a href="https://www.themealdb.com/api.php" target="_blank" rel="noreferrer" style={{ color: '#888', textDecoration: 'underline' }}>TheMealDB API</a>
+                    Data provided by <a 
+                    href="https://www.themealdb.com/api.php" 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    style={{ color: '#888', textDecoration: 'underline' }}>TheMealDB API</a>
                 </p>
             </div>
         </footer>
