@@ -152,11 +152,19 @@ const Home: React.FC = () => {
             padding: '0 20px 20px 20px', 
             maxWidth: '1200px', 
             margin: '0 auto', 
-            color: 'white' }}>
+            color: 'white' 
+            }}
+        >
             <h1 style={{ 
                 textAlign: 'center', 
                 margin: '30px 0', 
-                fontSize: '1.8rem' }}>What's cooking, good looking?
+                fontSize: '1.8rem',
+                WebkitTextStroke: '0.4px #36acfbff',
+                }}
+            >
+
+                    Table for one, panic for everyone.
+                    
             </h1>
             
             <form onSubmit={handleSearch} style={{ 
@@ -164,7 +172,9 @@ const Home: React.FC = () => {
                 display: 'flex', 
                 flexDirection: 'column', 
                 gap: '12px', 
-                alignItems: 'center' }}>
+                alignItems: 'center' 
+                }}
+            >
                 <input 
                     type="text" 
                     inputMode="search"
@@ -176,53 +186,66 @@ const Home: React.FC = () => {
                         width: '100%', 
                         maxWidth: '400px', 
                         borderRadius: '10px', 
-                        backgroundColor: '#141414ff', 
+                        backgroundColor: '#141414', 
                         color: 'white', 
-                        border: '1px solid #444444ff', 
-                        fontSize: '16px' }}
+                        border: '1px solid #444', 
+                        fontSize: '16px' 
+                    }}
                 />
+
                 <button type="submit" style={{ 
                     padding: '14px', 
                     width: '100%', 
                     maxWidth: '400px', 
                     borderRadius: '10px', 
                     border: 'none', 
-                    backgroundColor: '#3498dbff', 
+                    backgroundColor: '#3498db', 
                     color: 'white', 
                     fontWeight: 'bold', 
                     cursor: 'pointer', 
-                    fontSize: '16px' }}>
+                    fontSize: '16px' 
+                    }}
+                >
 
                     Search
 
                 </button>
+
             </form>
 
             <div style={{ 
                 position: 'sticky', 
-                top: '70px',
+                top: '0px',
                 zIndex: 1000, 
-                backgroundColor: '#121212ff', 
-                padding: '10px 0',
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '10px', 
-                width: '100%', 
-                maxWidth: '400px', 
-                margin: '0 auto 20px auto' 
-            }}>
+                width: '100vw',
+                marginLeft: 'calc(-50vw + 50%)',
+                padding: '20px 0',
+                backdropFilter: 'blur(12px)',
+                backgroundColor: 'rgba(18, 18, 18, 0.85)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+                }}
+            >
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: '1fr 1fr', 
-                    gap: '10px' }}
+                    gap: '10px',
+                    width: '100%',
+                    maxWidth: '400px',
+                    padding: '0 20px'
+                    }}
                 >
                     <Select<SelectOption, false>
                         options={[
                             { value: '', label: 'Categories' },
                             ...categories.map(cat => ({ value: cat.strCategory, label: cat.strCategory }))
                         ]}
-                        value={selectedCategory ? { value: selectedCategory, label: selectedCategory }
-                            : { value: '', label: 'Categories' }}
+                        value={selectedCategory ? { 
+                            value: selectedCategory, 
+                            label: selectedCategory } 
+                            : 
+                            { value: '', label: 'Categories' }}
                         onChange={(newValue) => handleCategoryChange(newValue?.value || '')}
                         styles={customStyles}
                         isSearchable={false}
@@ -233,48 +256,54 @@ const Home: React.FC = () => {
                             { value: '', label: 'Country' },
                             ...areas.map(area => ({ value: area.strArea, label: area.strArea }))
                         ]}
-                        value={selectedArea ? { value: selectedArea, label: selectedArea }
-                             : { value: '', label: 'Country' }}
+                        value={selectedArea ? { 
+                            value: selectedArea, label: selectedArea } 
+                            :
+                            { value: '', label: 'Country' }}
                         onChange={(newValue) => handleAreaChange(newValue?.value || '')}
                         styles={customStyles}
                         isSearchable={false}
                     />
+
                 </div>
                 
                 {!loading && (
                     <p style={{ 
-                        fontSize: '0.8rem', 
-                        color: '#888',
+                        fontSize: '0.75rem', 
+                        color: '#888', 
                         textAlign: 'center', 
-                        margin: '5px 0 0 0' }}>
+                        margin: '8px 0 0 0', 
+                        fontWeight: '500' 
+                        }}
+                    >
                         Showing {recipes.length} recipes
-                        {selectedCategory && ` í ${selectedCategory}`}
-                        {selectedArea && ` frá ${selectedArea}`}
+                        {selectedCategory && ` in ${selectedCategory}`}
+                        {selectedArea && ` from ${selectedArea}`}
                     </p>
                 )}
+
             </div>
 
-            {loading && 
-            <p style={{ 
+            {loading && <p style={{ 
                 textAlign: 'center', 
                 color: '#3498db', 
-                marginTop: '40px' }}>
-                    
-                    Loading...
-                
-            </p>}
+                marginTop: '40px' }}>Loading...
+                        </p>}
 
             {!loading && recipes.length > 0 && (
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', 
-                    gap: '15px'
-                }}>
+                    gap: '15px', 
+                    marginTop: '10px' 
+                    }}
+                >
+
                     {recipes.map((recipe) => (
-                        <Link 
-                            key={recipe.idMeal} 
-                            to={`/recipes/${recipe.idMeal}`} 
-                            style={{ textDecoration: 'none', color: 'inherit' }}
+                        <Link key={recipe.idMeal} to={`/recipes/${recipe.idMeal}`} style={{ 
+                            textDecoration: 'none', 
+                            color: 'inherit' 
+                            }}
                         >
                             <div style={{ 
                                 borderRadius: '15px', 
@@ -283,24 +312,29 @@ const Home: React.FC = () => {
                                 border: '1px solid #333', 
                                 display: 'flex', 
                                 flexDirection: 'column', 
-                                height: '100%' }}>
+                                height: '100%' 
+                                }}
+                            >
                                 <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ 
                                     width: '100%', 
                                     aspectRatio: '1/1', 
-                                    objectFit: 'cover' }} />
+                                    objectFit: 'cover' 
+                                    }} 
+                                />
                                 <div style={{ 
                                     padding: '12px', 
-                                    textAlign: 'center' }}>
+                                    textAlign: 'center' 
+                                    }}
+                                >
                                     <h3 style={{ 
                                         margin: '0', 
                                         fontSize: '0.9rem', 
-                                        fontWeight: '500',
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: 'vertical',
-                                        overflow: 'hidden',
-                                        lineHeight: '1.3'
-                                    }}>{recipe.strMeal}
+                                        fontWeight: '500', 
+                                        display: '-webkit-box', 
+                                        WebkitLineClamp: 2, 
+                                        WebkitBoxOrient: 'vertical', 
+                                        overflow: 'hidden', 
+                                        lineHeight: '1.3' }}>{recipe.strMeal}
                                     </h3>
                                 </div>
                             </div>

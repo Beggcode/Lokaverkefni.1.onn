@@ -13,8 +13,7 @@ export interface RecipeDetail {
     strCategory: string;
     strArea: string;
     strInstructions: string;
-    strYoutube?: string; // Valfrjáls hlekkur á YouTube myndband
-    // Þessi lína leyfir okkur að fletta upp strIngredient1, strIngredient2 o.s.frv. með lykkju
+    strYoutube?: string;
     [key: string]: string | undefined; 
 }
 

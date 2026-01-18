@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: cursive, sans-serif;
   color-scheme: dark;
 }
 
@@ -10,7 +10,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #121212;
+  background-color: #131212;
   color: white;
   overflow-x: hidden;
   width: 100%;

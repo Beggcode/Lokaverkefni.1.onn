@@ -46,17 +46,21 @@ const RecipeDetail: React.FC = () => {
     <p style={{ 
         textAlign: 'center', 
         marginTop: '50px', 
-        color: '#3498db' }}>
+        color: '#3498db' 
+        }}
+    >
             
-            Hleð uppskrift...
+            Loading recipe...
 
     </p>;
     if (!recipe) return 
     <p style={{ 
         textAlign: 'center', 
-        marginTop: '50px' }}>
+        marginTop: '50px' 
+        }}
+    >
             
-            Uppskrift fannst ekki.
+            Recipe not found.
 
     </p>;
 
@@ -74,11 +78,15 @@ const RecipeDetail: React.FC = () => {
             padding: '20px', 
             maxWidth: '900px', 
             margin: '0 auto', 
-            color: 'white' }}>
+            color: 'white' 
+            }}
+        >
             <header style={{ 
                 textAlign: 'center', 
                 marginBottom: '40px', 
-                marginTop: '20px' }}>
+                marginTop: '20px' 
+                }}
+            >
                 <h1 style={{ 
                     fontSize: 'clamp(2.2rem, 8vw, 4rem)', 
                     fontWeight: '900', 
@@ -89,22 +97,27 @@ const RecipeDetail: React.FC = () => {
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     textTransform: 'uppercase'
-                }}>
+                    }}
+                >
                     {recipe.strMeal}
                 </h1>
                 <div style={{ 
-                    height: '4px', 
-                    width: '80px', 
+                    height: '1px', 
+                    width: '120px', 
                     backgroundColor: '#3498db', 
                     margin: '0 auto 25px', 
-                    borderRadius: '2px' 
-                }}></div>
+                    }}
+                >
+
+                </div>
                 <p style={{ 
                     fontSize: '1.1rem', 
-                    color: '#888', 
+                    color: '#888888ff', 
                     textTransform: 'uppercase', 
                     letterSpacing: '3px', 
-                    fontWeight: '500' }}>
+                    fontWeight: '500' 
+                    }}
+                >
                     {recipe.strArea} • {recipe.strCategory}
                 </p>
             </header>
@@ -120,7 +133,8 @@ const RecipeDetail: React.FC = () => {
             {recipe.strYoutube && (
                 <div style={{ 
                     textAlign: 'center', 
-                    marginBottom: '40px' }}
+                    marginBottom: '40px' 
+                    }}
                 >
                     <a 
                         href={recipe.strYoutube} 
@@ -151,48 +165,69 @@ const RecipeDetail: React.FC = () => {
 
             <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-                gap: '40px', 
-                marginBottom: '60px' }}>
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', 
+                gap: '20px', 
+                marginBottom: '60px' 
+            }}>
                 <div style={{ 
                     backgroundColor: '#161616', 
-                    padding: '25px', 
+                    padding: '30px', 
                     borderRadius: '20px', 
-                    border: '1px solid #222' }}>
+                    border: '1px solid #222',
+                    height: 'fit-content'
+                }}>
                     <h2 style={{ 
                         fontSize: '1.5rem', 
-                        borderBottom: '2px solid #3498db', 
+                        borderBottom: '2px solid #333',
                         display: 'inline-block', 
                         paddingBottom: '5px', 
-                        marginBottom: '20px' }}>
-                            
-                            Ingredients
+                        marginBottom: '20px' 
+                    }}>
+
+                        Ingredients
 
                     </h2>
                     <ul style={{ 
                         paddingLeft: '20px', 
                         lineHeight: '2.2', 
-                        listStyleType: 'circle' }}
+                        listStyleType: 'circle',
+                        margin: 0
+                        }}
                     >
                         {ingredients.map((item, index) => (
-                            <li key={index} style={{ color: '#ccccccff' }}>{item}</li>
+                            <li key={index} style={{ color: '#ccc' }}>{item}</li>
                         ))}
                     </ul>
                 </div>
-                <div>
+
+                <div style={{ 
+                    backgroundColor: '#161616', 
+                    padding: '30px', 
+                    borderRadius: '20px', 
+                    border: '1px solid #222',
+                    height: 'fit-content'
+                    }}
+                >
                     <h2 style={{ 
                         fontSize: '1.5rem', 
                         borderBottom: '2px solid #333', 
-                        paddingBottom: '10px', 
-                        marginBottom: '20px' }}>
-                            
-                            Instructions
+                        display: 'inline-block',
+                        paddingBottom: '5px', 
+                        marginBottom: '20px' 
+                        }}
+                    >
+
+                        Instructions
 
                     </h2>
                     <p style={{ 
                         lineHeight: '1.8', 
                         color: '#ddd', 
-                        whiteSpace: 'pre-line' }}>{recipe.strInstructions}
+                        whiteSpace: 'pre-line',
+                        margin: 0 
+                        }}
+                    >
+                        {recipe.strInstructions}
                     </p>
                 </div>
             </div>
@@ -201,12 +236,15 @@ const RecipeDetail: React.FC = () => {
                 <div style={{ 
                     marginTop: '80px', 
                     borderTop: '1px solid #333', 
-                    paddingTop: '50px' }}
+                    paddingTop: '50px' 
+                    }}
                 >
                     <h2 style={{ 
                         textAlign: 'center', 
                         marginBottom: '40px', 
-                        fontSize: '1.8rem' }}>
+                        fontSize: '1.8rem' 
+                        }}
+                    >
                             
                             Similar recipes
                             
@@ -214,26 +252,35 @@ const RecipeDetail: React.FC = () => {
                     <div style={{ 
                         display: 'grid', 
                         gridTemplateColumns: 'repeat(auto-fill, minmax(145px, 1fr))', 
-                        gap: '20px' }}>
+                        gap: '20px' 
+                        }}
+                    >
                         {similarRecipes.map((item) => (
                             <Link key={item.idMeal} to={`/recipes/${item.idMeal}`} 
                             style={{ 
                                 textDecoration: 'none', 
-                                color: 'inherit' }}>
+                                color: 'inherit' 
+                                }}
+                            >
                                 <div style={{ 
                                     borderRadius: '15px', 
                                     backgroundColor: '#1e1e1eff', 
                                     overflow: 'hidden', 
                                     border: '1px solid #333333ff', 
-                                    height: '100%' }}>
+                                    height: '100%' 
+                                    }}
+                                >
                                     <img src={item.strMealThumb} alt={item.strMeal} style={{ 
                                         width: '100%', 
                                         aspectRatio: '1/1', 
-                                        objectFit: 'cover' }} 
+                                        objectFit: 'cover' 
+                                        }} 
                                     />
                                     <div style={{ 
                                         padding: '12px', 
-                                        textAlign: 'center' }}>
+                                        textAlign: 'center' 
+                                        }}
+                                    >
                                         <h3 style={{ 
                                             fontSize: '0.9rem', 
                                             margin: '0', 
@@ -241,7 +288,9 @@ const RecipeDetail: React.FC = () => {
                                             WebkitLineClamp: 2, 
                                             WebkitBoxOrient: 'vertical', 
                                             overflow: 'hidden', 
-                                            fontWeight: '600' }}>{item.strMeal}
+                                            fontWeight: '600' 
+                                            }}
+                                        >{item.strMeal}
                                         </h3>
                                     </div>
                                 </div>

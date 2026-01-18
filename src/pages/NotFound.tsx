@@ -16,15 +16,19 @@ const NotFound: React.FC = () => {
             width: '100%' }}>
             <h1 style={{ 
                 fontSize: 'clamp(4rem, 20vw, 8rem)', 
-                color: '#3498db' }}>
+                color: '#3498db' 
+                }}
+            >
                     
                     404
-                    
+
             </h1>
             <h2 style={{ 
                 fontSize: '1.5rem', 
                 marginBottom: '20px', 
-                textTransform: 'uppercase' }}>
+                textTransform: 'uppercase' 
+                }}
+            >
                     
                     Kitchen Emergency!
 
@@ -33,7 +37,9 @@ const NotFound: React.FC = () => {
             <div style={{ 
                 margin: '20px 0', 
                 width: '100%', 
-                maxWidth: '400px' }}>
+                maxWidth: '400px' 
+                }}
+            >
                 <img 
                     src={gordonImage} 
                     alt="Angry Gordon Ramsay" 
@@ -48,9 +54,12 @@ const NotFound: React.FC = () => {
                 fontSize: '1rem', 
                 color: '#888', 
                 maxWidth: '90%', 
-                marginBottom: '30px' }}>
+                marginBottom: '30px' 
+                }}
+            >
 
-                "IT'S RAW! WHERE IS THE LAMB SAUCE?!" <br />
+                "IT'S RAW! WHERE IS THE LAMB SAUCE?!" 
+                <br />
                 This page is so undercooked it's still running across the field!
                 
             </p>
@@ -65,7 +74,8 @@ const NotFound: React.FC = () => {
                     color: 'white', 
                     border: 'none', 
                     borderRadius: '30px', 
-                    cursor: 'pointer' }}
+                    cursor: 'pointer' 
+                }}
             >
 
                 Back to the Bistro

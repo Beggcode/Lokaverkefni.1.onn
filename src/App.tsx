@@ -13,7 +13,8 @@ function App() {
         width: '100%', 
         minHeight: '100vh', 
         display: 'flex', 
-        flexDirection: 'column' }}
+        flexDirection: 'column' 
+        }}
       >
         <Header />
         <main style={{ 
@@ -21,7 +22,8 @@ function App() {
           width: '100%', 
           maxWidth: '1200px', 
           margin: '0 auto', 
-          padding: '20px' }}
+          padding: '20px' 
+          }}
         >
           <Routes>
             <Route path="/" element={<RecipeList />} /> 
